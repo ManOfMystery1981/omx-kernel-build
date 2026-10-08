@@ -10,7 +10,8 @@ kernel built with your own CPU's real execution profiles baked in.
 
 | Script | Purpose |
 |---|---|
-| `OMX-Kernel-Build-Script-2.9.0.sh` | Main builder: fetches the XanMod tree, stamps the config, builds, packages, and installs RPMs |
+| `OMX-Kernel-Build-Script-2.9.1.sh` | Main builder (current): fetches the XanMod tree, stamps the config, builds, packages, and installs RPMs |
+| `OMX-Kernel-Build-Script-2.9.0.sh` | Previous release (kept for reference) |
 | `omx-afdo-profile.sh` | Profiling companion: records branch samples with `perf`, converts them to AutoFDO/Propeller profiles |
 
 ## Requirements
@@ -32,7 +33,7 @@ Download from the [release page](https://github.com/ManOfMystery1981/omx-kernel-
 
 ```bash
 # 1. Plain optimized build (ThinLTO, native CPU tuning, 250 Hz)
-./OMX-Kernel-Build-Script-2.9.0.sh --xanmod-7 -y
+./OMX-Kernel-Build-Script-2.9.1.sh --xanmod-7 -y
 ```
 
 ## The 4-pass PGO pipeline
@@ -42,7 +43,7 @@ the build flags at every stage so a mismatched profile can never silently poison
 
 ```bash
 # Pass 1: build the AutoFDO-instrumented kernel and boot it
-./OMX-Kernel-Build-Script-2.9.0.sh --xanmod-7 --autofdo -y
+./OMX-Kernel-Build-Script-2.9.1.sh --xanmod-7 --autofdo -y
 # ... reboot into it, then record a profile of your real workload:
 sudo ./omx-afdo-profile.sh record /usr/src/kernels/$(uname -r)/vmlinux ~/afdo/run1.afdo 3600
 
@@ -50,12 +51,12 @@ sudo ./omx-afdo-profile.sh record /usr/src/kernels/$(uname -r)/vmlinux ~/afdo/ru
 ./omx-afdo-profile.sh merge ~/afdo/final.afdo ~/afdo/run1.afdo ~/afdo/run2.afdo
 
 # Pass 3: build the Propeller-labeled kernel with the AutoFDO profile, boot it, record again
-./OMX-Kernel-Build-Script-2.9.0.sh --xanmod-7 --afdo-profile ~/afdo/final.afdo --propeller -y
+./OMX-Kernel-Build-Script-2.9.1.sh --xanmod-7 --afdo-profile ~/afdo/final.afdo --propeller -y
 # ... reboot, then:
 sudo ./omx-afdo-profile.sh record-propeller /usr/src/kernels/$(uname -r)/vmlinux ~/afdo/prop 3600
 
 # Pass 4: the final kernel — AutoFDO + Propeller profiles applied
-./OMX-Kernel-Build-Script-2.9.0.sh --xanmod-7 \
+./OMX-Kernel-Build-Script-2.9.1.sh --xanmod-7 \
   --afdo-profile ~/afdo/final.afdo \
   --propeller-profile ~/afdo/prop -y
 ```
@@ -71,7 +72,9 @@ These are real distro quirks discovered the hard way, handled automatically:
   `.bss..brk`, the x86 CPU-vendor table, and `kernel_info` — the kernel then dies in `setup_arch`.
   The script wraps `ld.lld` to pin `--icf=none --no-gc-sections`.
 - **`-u kernel_info`** is injected into `arch/x86/boot/compressed/Makefile` so `bzImage` links.
-- **GNU `nm`** is substituted for `llvm-nm` when computing bzImage offsets.
+- **`llvm-nm` is used for every build step** (2.9.1+). The old GNU-`nm` swap for bzImage is now
+  opt-in (`--boot-hacks`) — mixing `nm` implementations between steps made Kconfig silently drop
+  ThinLTO and rebuild the whole kernel without it.
 - **Polly/pipeliner `-mllvm` flags** are stripped by the Clang wrapper (they break kernel builds).
 
 ## Output
