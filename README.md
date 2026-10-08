@@ -25,9 +25,8 @@ kernel built with your own CPU's real execution profiles baked in.
 
 ### Prebuilt llvm-propeller RPM (OpenMandriva)
 
-Download: https://mega.nz/file/O15hgTbA#BcdIRJEl2K69zrH-bhjow9ZtuKEyRR8ddquMDR5QZgU
-
-(A GitHub Release with this RPM is coming — the mega link is the current mirror.)
+Download from the [release page](https://github.com/ManOfMystery1981/omx-kernel-build/releases/tag/propeller-rpm-v1)
+(mirror: https://mega.nz/file/O15hgTbA#BcdIRJEl2K69zrH-bhjow9ZtuKEyRR8ddquMDR5QZgU)
 
 ## Quick start
 
