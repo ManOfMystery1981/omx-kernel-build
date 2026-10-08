@@ -59,7 +59,8 @@
 #     (found via PROPELLER_TOOL, PATH, then /opt/llvm-propeller*/bin)
 #     OR create_llvm_prof from a compatible AutoFDO/Propeller build
 #     Prebuilt RPM (OpenMandriva) with generate_propeller_profiles:
-#     https://mega.nz/file/O15hgTbA#BcdIRJEl2K69zrH-bhjow9ZtuKEyRR8ddquMDR5QZgU
+#     https://github.com/ManOfMystery1981/omx-kernel-build/releases/tag/propeller-rpm-v1
+#     (mirror: https://mega.nz/file/O15hgTbA#BcdIRJEl2K69zrH-bhjow9ZtuKEyRR8ddquMDR5QZgU)
 #   - Intel LBR or AMD branch-sampling hardware
 #
 # The kernel vmlinux must correspond EXACTLY to the kernel being profiled.
