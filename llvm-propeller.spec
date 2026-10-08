@@ -18,6 +18,13 @@ that it does not conflict with the system LLVM/Clang installation.
 The package contains Clang, llvm-profgen, and the Clang builtin headers
 required by the compiler.
 
+# Build with the three source/build trees defined, e.g.:
+#   rpmbuild -bb \
+#     --define "llvm_build /path/to/llvm-build" \
+#     --define "llvm_src /path/to/llvm-source" \
+#     --define "propeller_build /path/to/llvm-propeller-build" \
+#     llvm-propeller.spec
+
 %prep
 
 %build
@@ -43,8 +50,8 @@ cp -a "$LLVM_BUILD/bin/clang-cl" "$PREFIX/bin/"
 cp -a "$LLVM_BUILD/bin/clang-cpp" "$PREFIX/bin/"
 cp -a "$LLVM_BUILD/bin/llvm-profgen" "$PREFIX/bin/"
 
-# Propeller profile generator.
-cp -a "/home/noncitizen-national/llvm-propeller/build/propeller/propeller/generate_propeller_profiles" "$PREFIX/bin/"
+# Propeller profile generator (from the propeller build tree).
+cp -a "$PROPELLER_BUILD/propeller/propeller/generate_propeller_profiles" "$PREFIX/bin/"
 
 # Preserve the Clang driver names.
 ln -s clang-23 "$PREFIX/bin/clang"
