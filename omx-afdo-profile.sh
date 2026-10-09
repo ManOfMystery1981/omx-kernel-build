@@ -596,13 +596,18 @@ convert_propeller() {
         # shellcheck disable=SC2086
         "$tool" $args
     else
+        # Default flags match the prebuilt v23 generate_propeller_profiles
+        # (llvm-propeller RPM, /opt/llvm-propeller-23). That tool accepts only
+        # --binary/--profile/--profile_type/--cc_profile/--ld_profile and
+        # rejects the propeller.rst-style flags (--format, --out,
+        # --propeller_symorder, --propeller_output_module_name). For a
+        # different tool version, export PROPELLER_ARGS instead.
         "$tool" \
             --binary="$vmlinux" \
             --profile="$profile" \
-            --format=propeller \
-            --propeller_output_module_name \
-            --out="${prefix}_cc_profile.txt" \
-            --propeller_symorder="${prefix}_ld_profile.txt"
+            --profile_type=PERF_LBR \
+            --cc_profile="${prefix}_cc_profile.txt" \
+            --ld_profile="${prefix}_ld_profile.txt"
     fi
 
     [[ -s "${prefix}_cc_profile.txt" ]] ||
