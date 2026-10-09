@@ -15,6 +15,7 @@ kernel built with your own CPU's real execution profiles baked in.
 | `OMX-Kernel-Build-Script-2.9.1.sh` | Previous release (kept for reference) |
 | `OMX-Kernel-Build-Script-2.9.0.sh` | Previous release (kept for reference) |
 | `omx-afdo-profile.sh` | Profiling companion: records branch samples with `perf`, converts them to AutoFDO/Propeller profiles |
+| `omx-kernel-summary.sh` | Prints a compact, screenshot-friendly summary of how the running kernel was built (needs `zcat` — install `gzip-utils` or `zutils`) |
 
 ## Requirements
 
